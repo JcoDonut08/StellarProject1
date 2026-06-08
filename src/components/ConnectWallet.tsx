@@ -1,6 +1,8 @@
 'use client';
+
 import { useState } from 'react';
 import type { WalletState } from '@/hooks/useWallet';
+import { WalletIcon } from '@/components/MedicalIcons';
 
 export default function ConnectWallet({
   publicKey,
@@ -20,17 +22,17 @@ export default function ConnectWallet({
 
   if (publicKey) {
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-end gap-2">
         <button
           onClick={copy}
           title="Copy full address"
-          className="rounded bg-gray-100 px-3 py-1 font-mono text-sm text-gray-700 transition-colors hover:bg-gray-200"
+          className="rounded-full border border-[var(--border)] bg-white px-3 py-2 font-mono text-xs text-[var(--foreground)] transition hover:border-[rgba(47,111,237,0.2)] hover:bg-sky-50"
         >
-          {copied ? 'Copied!' : `${publicKey.slice(0, 6)}…${publicKey.slice(-6)}`}
+          {copied ? 'Copied' : `${publicKey.slice(0, 6)}...${publicKey.slice(-6)}`}
         </button>
         <button
           onClick={disconnect}
-          className="text-sm text-red-500 hover:underline"
+          className="rounded-full border border-[var(--border)] bg-white px-3 py-2 text-xs text-[var(--muted)] transition hover:border-[rgba(47,111,237,0.2)] hover:bg-sky-50 hover:text-[var(--foreground)]"
         >
           Disconnect
         </button>
@@ -43,11 +45,12 @@ export default function ConnectWallet({
       <button
         onClick={connect}
         disabled={connecting}
-        className="rounded bg-indigo-600 px-4 py-2 text-white transition-colors hover:bg-indigo-700 disabled:opacity-50"
+        className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,var(--accent),var(--accent-strong))] px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {connecting ? 'Connecting…' : 'Connect Freighter'}
+        <WalletIcon className="h-4 w-4" />
+        {connecting ? 'Connecting...' : 'Connect Freighter'}
       </button>
-      {error && <p className="mt-2 max-w-xs text-sm text-red-500">{error}</p>}
+      {error && <p className="mt-2 max-w-xs text-sm text-rose-600">{error}</p>}
     </div>
   );
 }

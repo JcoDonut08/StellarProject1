@@ -1,33 +1,24 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
+import './globals.css';
+import { WalletProvider } from '@/components/wallet-provider';
 
 export const metadata: Metadata = {
-  title: "StellarX Starter — PUP Workshop",
-  description: "Wallet, payments, and a Soroban contract on Stellar testnet.",
+  title: 'Stellar Care Fund',
+  description:
+    'Zero-fee medical crowdfunding on Stellar with direct USDC or XLM donations to patient wallets.',
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        <WalletProvider>{children}</WalletProvider>
+      </body>
     </html>
   );
 }

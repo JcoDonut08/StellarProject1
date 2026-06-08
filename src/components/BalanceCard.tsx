@@ -1,6 +1,8 @@
 'use client';
-import { useState, useEffect } from 'react';
+
+import { useEffect, useState } from 'react';
 import { fetchBalances, type Balances } from '@/lib/balances';
+import { HeartPulseIcon, WalletIcon } from '@/components/MedicalIcons';
 
 export default function BalanceCard({
   publicKey,
@@ -14,11 +16,12 @@ export default function BalanceCard({
 
   useEffect(() => {
     let active = true;
-    setLoading(true);
+
     fetchBalances(publicKey)
-      .then((b) => active && setBalances(b))
+      .then((result) => active && setBalances(result))
       .catch(() => active && setBalances(null))
       .finally(() => active && setLoading(false));
+
     return () => {
       active = false;
     };
@@ -26,34 +29,44 @@ export default function BalanceCard({
 
   if (loading) {
     return (
-      <div className="mt-4 grid animate-pulse grid-cols-2 gap-4">
-        <div className="h-20 rounded bg-gray-200" />
-        <div className="h-20 rounded bg-gray-200" />
+      <div className="grid gap-4 rounded-[24px] border border-[var(--border)] bg-white p-4 md:grid-cols-2 xl:col-span-1">
+        <div className="h-24 animate-pulse rounded-2xl bg-slate-200" />
+        <div className="h-24 animate-pulse rounded-2xl bg-slate-200" />
       </div>
     );
   }
 
   if (balances && !balances.funded) {
     return (
-      <p className="mt-4 rounded border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
-        This account isn’t funded yet. Click “Fund with Friendbot” above.
-      </p>
+      <div className="rounded-[24px] border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 xl:col-span-1">
+        This account is not funded yet. Use Friendbot to mint testnet XLM first.
+      </div>
     );
   }
 
   if (!balances) {
-    return <p className="mt-4 text-sm text-red-500">Failed to load balances.</p>;
+    return (
+      <div className="rounded-[24px] border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700 xl:col-span-1">
+        Failed to load wallet balances.
+      </div>
+    );
   }
 
   return (
-    <div className="mt-4 grid grid-cols-2 gap-4">
-      <div className="rounded border border-gray-200 bg-white p-4">
-        <p className="text-xs uppercase tracking-wide text-gray-500">XLM</p>
-        <p className="text-2xl font-bold text-gray-900">{balances.xlm}</p>
+    <div className="grid gap-4 rounded-[24px] border border-[var(--border)] bg-white p-4 md:grid-cols-2 xl:col-span-1">
+      <div className="rounded-2xl border border-[var(--border)] bg-sky-50 p-4">
+        <div className="flex items-center gap-2">
+          <HeartPulseIcon className="h-4 w-4 text-[var(--accent)]" />
+          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted)]">XLM</p>
+        </div>
+        <p className="mt-2 font-mono text-2xl text-[var(--foreground)]">{balances.xlm}</p>
       </div>
-      <div className="rounded border border-gray-200 bg-white p-4">
-        <p className="text-xs uppercase tracking-wide text-gray-500">USDC</p>
-        <p className="text-2xl font-bold text-gray-900">{balances.usdc}</p>
+      <div className="rounded-2xl border border-[var(--border)] bg-emerald-50 p-4">
+        <div className="flex items-center gap-2">
+          <WalletIcon className="h-4 w-4 text-[var(--accent)]" />
+          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted)]">USDC</p>
+        </div>
+        <p className="mt-2 font-mono text-2xl text-[var(--foreground)]">{balances.usdc}</p>
       </div>
     </div>
   );
